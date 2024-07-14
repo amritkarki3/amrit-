@@ -11,6 +11,7 @@ https://docs.amplication.com/how-to/custom-code
   */
 import { PrismaService } from "../../prisma/prisma.service";
 import { Prisma, Position as PrismaPosition } from "@prisma/client";
+import { CreatePositionDto } from "../CreatePositionDto";
 
 export class PositionServiceBase {
   constructor(protected readonly prisma: PrismaService) {}
@@ -43,5 +44,11 @@ export class PositionServiceBase {
     args: Prisma.PositionDeleteArgs
   ): Promise<PrismaPosition> {
     return this.prisma.position.delete(args);
+  }
+  async CreatePosition(args: CreatePositionDto): Promise<string> {
+    throw new Error("Not implemented");
+  }
+  async FetchPositionEntries(args: CreatePositionDto): Promise<string> {
+    throw new Error("Not implemented");
   }
 }

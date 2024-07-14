@@ -20,6 +20,7 @@ import { PositionFindUniqueArgs } from "./PositionFindUniqueArgs";
 import { CreatePositionArgs } from "./CreatePositionArgs";
 import { UpdatePositionArgs } from "./UpdatePositionArgs";
 import { DeletePositionArgs } from "./DeletePositionArgs";
+import { CreatePositionDto } from "../CreatePositionDto";
 import { PositionService } from "../position.service";
 @graphql.Resolver(() => Position)
 export class PositionResolverBase {
@@ -95,5 +96,21 @@ export class PositionResolverBase {
       }
       throw error;
     }
+  }
+
+  @graphql.Mutation(() => String)
+  async CreatePosition(
+    @graphql.Args()
+    args: CreatePositionDto
+  ): Promise<string> {
+    return this.service.CreatePosition(args);
+  }
+
+  @graphql.Query(() => String)
+  async FetchPositionEntries(
+    @graphql.Args()
+    args: CreatePositionDto
+  ): Promise<string> {
+    return this.service.FetchPositionEntries(args);
   }
 }

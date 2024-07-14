@@ -16,18 +16,20 @@ import * as errors from "../../errors";
 import { Request } from "express";
 import { plainToClass } from "class-transformer";
 import { ApiNestedQuery } from "../../decorators/api-nested-query.decorator";
+import { GrpcMethod } from "@nestjs/microservices";
 import { PositionService } from "../position.service";
 import { PositionCreateInput } from "./PositionCreateInput";
-import { Position } from "./Position";
-import { PositionFindManyArgs } from "./PositionFindManyArgs";
+import { PositionWhereInput } from "./PositionWhereInput";
 import { PositionWhereUniqueInput } from "./PositionWhereUniqueInput";
+import { PositionFindManyArgs } from "./PositionFindManyArgs";
 import { PositionUpdateInput } from "./PositionUpdateInput";
-import { CreatePositionDto } from "../CreatePositionDto";
+import { Position } from "./Position";
 
-export class PositionControllerBase {
+export class PositionGrpcControllerBase {
   constructor(protected readonly service: PositionService) {}
   @common.Post()
   @swagger.ApiCreatedResponse({ type: Position })
+  @GrpcMethod("PositionService", "createPosition")
   async createPosition(
     @common.Body() data: PositionCreateInput
   ): Promise<Position> {
@@ -46,6 +48,7 @@ export class PositionControllerBase {
   @common.Get()
   @swagger.ApiOkResponse({ type: [Position] })
   @ApiNestedQuery(PositionFindManyArgs)
+  @GrpcMethod("PositionService", "positions")
   async positions(@common.Req() request: Request): Promise<Position[]> {
     const args = plainToClass(PositionFindManyArgs, request.query);
     return this.service.positions({
@@ -63,6 +66,7 @@ export class PositionControllerBase {
   @common.Get("/:id")
   @swagger.ApiOkResponse({ type: Position })
   @swagger.ApiNotFoundResponse({ type: errors.NotFoundException })
+  @GrpcMethod("PositionService", "position")
   async position(
     @common.Param() params: PositionWhereUniqueInput
   ): Promise<Position | null> {
@@ -87,6 +91,7 @@ export class PositionControllerBase {
   @common.Patch("/:id")
   @swagger.ApiOkResponse({ type: Position })
   @swagger.ApiNotFoundResponse({ type: errors.NotFoundException })
+  @GrpcMethod("PositionService", "updatePosition")
   async updatePosition(
     @common.Param() params: PositionWhereUniqueInput,
     @common.Body() data: PositionUpdateInput
@@ -116,6 +121,7 @@ export class PositionControllerBase {
   @common.Delete("/:id")
   @swagger.ApiOkResponse({ type: Position })
   @swagger.ApiNotFoundResponse({ type: errors.NotFoundException })
+  @GrpcMethod("PositionService", "deletePosition")
   async deletePosition(
     @common.Param() params: PositionWhereUniqueInput
   ): Promise<Position | null> {
@@ -138,39 +144,5 @@ export class PositionControllerBase {
       }
       throw error;
     }
-  }
-
-  @common.Post("/create-position")
-  @swagger.ApiOkResponse({
-    type: String,
-  })
-  @swagger.ApiNotFoundResponse({
-    type: errors.NotFoundException,
-  })
-  @swagger.ApiForbiddenResponse({
-    type: errors.ForbiddenException,
-  })
-  async CreatePosition(
-    @common.Body()
-    body: CreatePositionDto
-  ): Promise<string> {
-    return this.service.CreatePosition(body);
-  }
-
-  @common.Get("/fetch-positions")
-  @swagger.ApiOkResponse({
-    type: String,
-  })
-  @swagger.ApiNotFoundResponse({
-    type: errors.NotFoundException,
-  })
-  @swagger.ApiForbiddenResponse({
-    type: errors.ForbiddenException,
-  })
-  async FetchPositionEntries(
-    @common.Body()
-    body: CreatePositionDto
-  ): Promise<string> {
-    return this.service.FetchPositionEntries(body);
   }
 }

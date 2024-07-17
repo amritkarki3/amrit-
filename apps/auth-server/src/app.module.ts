@@ -1,5 +1,6 @@
 import { Module } from "@nestjs/common";
 import { UserModule } from "./user/user.module";
+import { BaseServiceModule } from "./BaseService/baseservice.module";
 import { PasswordServiceModule } from "./PasswordService/passwordservice.module";
 import { TokenServiceModule } from "./TokenService/tokenservice.module";
 import { HealthModule } from "./health/health.module";
@@ -20,6 +21,7 @@ import { AuthModule } from "./auth/auth.module";
     ACLModule,
     AuthModule,
     UserModule,
+    BaseServiceModule,
     PasswordServiceModule,
     TokenServiceModule,
     HealthModule,
